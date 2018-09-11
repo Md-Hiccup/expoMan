@@ -12,6 +12,7 @@ const validateLoginInput = require("../../validation/login");
 
 //  Load User Model
 const User = require("../../models/User");
+const Items = require("../../models/Items");
 
 //  @route  GET api/users/test
 //  @desc   Test user route
@@ -126,6 +127,21 @@ router.get(
       id: req.user.id,
       name: req.user.name,
       email: req.user.email
+    });
+  }
+);
+
+//  @route  DELETE api/users/delete
+//  @desc   Delete user and its all items
+//  @access Private
+router.delete(
+  "/delete",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Items.findOneAndRemove({ user: req.user.id }).then(() => {
+      User.findOneAndRemove({ _id: req.user.id }).then(() => {
+        res.json({ success: true });
+      });
     });
   }
 );

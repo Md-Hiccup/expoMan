@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const moment = require('moment')
 // Create Schema
 const ItemSchema = new Schema({
   user: {
@@ -22,7 +22,11 @@ const ItemSchema = new Schema({
         required: true
       }
     }
-  ]
+  ],
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = Items = mongoose.model("items", ItemSchema);

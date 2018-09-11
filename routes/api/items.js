@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+const moment = require("moment");
+
 //  Load Input Validation
 const validateItemsInput = require("../../validation/item");
 
@@ -13,7 +15,7 @@ const Items = require("../../models/Items");
 router.get("/test", (req, res) => res.json({ msg: "Items Works" }));
 
 //  @route  GET api/items/
-//  @desc   Get Items as per User
+//  @desc   Get Items list of User
 //  @access Private
 router.get(
   "/",
@@ -30,25 +32,32 @@ router.get(
   }
 );
 
-//  @route  POST api/items
-//  @desc   Get individual item
+//  @route  GET api/items/item/:id
+//  @desc   GET item by :id
 //  @access Private
 router.get(
-  "/:id",
+  "/item/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     id = req.params.id;
-    Items.find({ user: req.user.id })
-      .then(item => {
-        console.log("s", item);
-        res.json(item);
+    Items.findOne({ user: req.user.id })
+      .then(items => {
+        const getIndex = items.items.filter(item => item.id == req.params.id);
+        console.log(getIndex.length);
+        if (getIndex.length) {
+          console.log("inside");
+          return getIndex[0];
+        }
+        return res.status(400);
       })
-      .catch(err =>
-        res.status(404).json({
-          noitemfound: "No item found with that id"
-        })
-      );
-    // });
+      .then(data => {
+        res.json(data);
+      })
+      .catch(() => {
+        return res.status(404).json({
+          noitemfound: "No item Found on this id"
+        });
+      });
   }
 );
 
@@ -68,25 +77,26 @@ router.post(
     itemDate = {};
 
     Items.findOne({ user: req.user.id }).then(material => {
+      itemDate = {
+        name: req.body.name,
+        price: req.body.price,
+        date: req.body.date
+      };
       if (!material) {
         newItems = new Items({
           user: req.user.id,
           items: []
         });
-        items = {
-          name: req.body.name,
-          price: req.body.price
-        };
-        newItems.items.unshift(items);
+        newItems.items.unshift(itemDate);
         newItems
           .save()
           .then(items => res.json(items))
           .catch(err => res.status(404).json("not inserted !!"));
       }
-      itemDate = {
-        name: req.body.name,
-        price: req.body.price
-      };
+      // itemDate = {
+      //   name: req.body.name,
+      //   price: req.body.price
+      // };
       material.items.unshift(itemDate);
       material
         .save()
@@ -96,11 +106,11 @@ router.post(
   }
 );
 
-//  @route  Delete  api/items/:id
+//  @route  Delete  api/items/item/:id
 //  @desc   Delete item from items
 //  @access Private
 router.delete(
-  "/:id",
+  "/item/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Items.findOne({ user: req.user.id })
@@ -120,4 +130,138 @@ router.delete(
   }
 );
 
+//  @route  GET   api/items/date/2018-09-09
+//  @desc   Get Item as per date
+//  @access Private
+router.get(
+  "/date/:date",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    date = req.params.date;
+    date = new Date(date);
+    console.log(date);
+    console.log("inside date");
+    // return res.json(date)
+    Items.findOne({ user: req.user.id })
+      .then(items => {
+        // console.log(items);
+        const getData = items.items.filter(obj => {
+          // console.log(obj.date.getDate())
+          return obj.date.getDate() == date.getDate();
+        });
+        // console.log(getData);
+        if (getData.length) {
+          console.log("inside");
+          return getData;
+        }
+        return res.status(400);
+      })
+      .then(data => {
+        const total = data
+          .map(a => {
+            return a.price;
+          })
+          .reduce((a, c) => a + c);
+
+        console.log("total", total);
+        return res.status(200).json({
+          status: "success",
+          total,
+          data
+        });
+      })
+      .catch(() => {
+        return res.status(400).json({
+          noitemFound: "No Data Found"
+        });
+      });
+  }
+);
+
+//  @route  GET   api/items/monthly/2018-09-09
+//  @desc   Get Item as monthly
+//  @access Private
+router.get(
+  "/monthly/:date",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    date = req.params.date;
+    date = new Date(date);
+    console.log(date);
+    console.log("monthly wise show income");
+    Items.findOne({ user: req.user.id })
+      .then(items => {
+        // console.log(items);
+        const getData = items.items.filter(
+          obj => obj.date.getMonth() + 1 == date.getMonth() + 1
+        );
+        console.log(getData);
+        if (getData.length) {
+          console.log("inside");
+          return getData;
+        }
+        return res.status(400);
+      })
+      .then(data => {
+        const total = data
+          .map(a => {
+            return a.price;
+          })
+          .reduce((a, c) => a + c);
+        console.log("total", total);
+        return res.status(200).json({
+          status: "success",
+          total,
+          data
+        });
+      })
+      .catch(() => {
+        return res.status(400).json({
+          noitemFound: "No Data Found"
+        });
+      });
+  }
+);
+
+//  @route  GET   api/items/weekly/2018-09-09
+//  @desc   Get Item as weekly
+//  @access Private
+router.get(
+  "/quarterly/:date",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    date = req.params.date;
+    date = new Date(date);
+    quarter = getQuarter(date);
+    console.log("inside quarterly");
+    Items.findOne({ user: req.user.id })
+      .then(data => {
+        quart = data.items.filter(q => getQuarter(q.date) == quarter);
+        // console.log(quart);
+        return quart;
+      })
+      .then(data => {
+        const total = data
+          .map(a => {
+            return a.price;
+          })
+          .reduce((a, c) => a + c);
+        console.log("total", total);
+        return res.status(200).json({
+          status: "success",
+          total,
+          data
+        });
+      })
+      .catch(() => {
+        return res.status(400).json({
+          noitemFound: "No Data Found"
+        });
+      });
+  }
+);
+
+function getQuarter(date) {
+  return Math.floor((date.getMonth() + 3) / 3);
+}
 module.exports = router;
