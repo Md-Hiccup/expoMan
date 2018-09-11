@@ -139,19 +139,14 @@ router.get(
   (req, res) => {
     date = req.params.date;
     date = new Date(date);
-    console.log(date);
-    console.log("inside date");
-    // return res.json(date)
+    date = getDate(date)
+    console.log("inside date ", date);
     Items.findOne({ user: req.user.id })
       .then(items => {
-        // console.log(items);
         const getData = items.items.filter(obj => {
-          // console.log(obj.date.getDate())
-          return obj.date.getDate() == date.getDate();
+          return getDate(obj.date) == date
         });
-        // console.log(getData);
         if (getData.length) {
-          console.log("inside");
           return getData;
         }
         return res.status(400);
@@ -166,6 +161,7 @@ router.get(
         console.log("total", total);
         return res.status(200).json({
           status: "success",
+          date,
           total,
           data
         });
@@ -187,13 +183,13 @@ router.get(
   (req, res) => {
     date = req.params.date;
     date = new Date(date);
-    console.log(date);
-    console.log("monthly wise show income");
+    month = date.getMonth() + 1
+    console.log("monthly wise show income", month);
     Items.findOne({ user: req.user.id })
       .then(items => {
         // console.log(items);
         const getData = items.items.filter(
-          obj => obj.date.getMonth() + 1 == date.getMonth() + 1
+          obj => obj.date.getMonth() + 1 == month
         );
         console.log(getData);
         if (getData.length) {
@@ -211,6 +207,7 @@ router.get(
         console.log("total", total);
         return res.status(200).json({
           status: "success",
+          month,
           total,
           data
         });
@@ -223,8 +220,8 @@ router.get(
   }
 );
 
-//  @route  GET   api/items/weekly/2018-09-09
-//  @desc   Get Item as weekly
+//  @route  GET   api/items/quarterly/2018-09-09
+//  @desc   Get Item as quarterly
 //  @access Private
 router.get(
   "/quarterly/:date",
@@ -249,6 +246,7 @@ router.get(
         console.log("total", total);
         return res.status(200).json({
           status: "success",
+          quarter,
           total,
           data
         });
@@ -261,7 +259,61 @@ router.get(
   }
 );
 
-function getQuarter(date) {
-  return Math.floor((date.getMonth() + 3) / 3);
+//  @route  GET   api/items/quarterly/2018-09-09
+//  @desc   Get Item as quarterly
+//  @access Private
+router.get(
+  "/weekly/:date",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    date = req.params.date;
+    date = new Date(date);
+    week = getWeek(date);
+    console.log("inside weekly", week);
+    Items.findOne({ user: req.user.id })
+      .then(data => {
+        weekly = data.items.filter(q => getWeek(q.date) == week);
+        return weekly;
+      })
+      .then(data => {
+        const total = data
+          .map(a => {
+            return a.price;
+          })
+          .reduce((a, c) => a + c);
+        
+        console.log("total", total);
+        return res.status(200).json({
+          status: "success",
+          week,
+          total,
+          data
+        });
+      })
+      .catch(() => {
+        return res.status(400).json({
+          noitemFound: "No Data Found"
+        });
+      });
+  }
+);
+
+
+//  Get Date (YYYY-MM-DD)
+const getDate = date => {
+  return date.toISOString().slice(0, 10);
 }
+
+//  Get Quarter of Date
+const getQuarter = date => {
+  return Math.floor((date.getMonth() + 3) / 3);
+};
+
+//  Get Week of Year
+const getWeek = date => {
+  var onejan = new Date(date.getFullYear(), 0, 1);
+  week = Math.ceil(((date - onejan) / 86400000 + onejan.getDay() + 1) / 7);
+  return week;
+};
+
 module.exports = router;
