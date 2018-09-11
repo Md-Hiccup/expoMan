@@ -13,7 +13,7 @@ const Items = require("../../models/Items");
 router.get("/test", (req, res) => res.json({ msg: "Items Works" }));
 
 //  @route  GET api/items/
-//  @desc   Get Items as per User
+//  @desc   Get Items list of User
 //  @access Private
 router.get(
   "/",
@@ -30,11 +30,11 @@ router.get(
   }
 );
 
-//  @route  GET api/items
+//  @route  GET api/items/item/:id
 //  @desc   Get item by :id
 //  @access Private
 router.get(
-  "/:id",
+  "/item/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     id = req.params.id;
@@ -77,7 +77,8 @@ router.post(
     Items.findOne({ user: req.user.id }).then(material => {
       itemDate = {
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        date: new Date(req.body.date)
       };
       if (!material) {
         newItems = new Items({
@@ -103,11 +104,11 @@ router.post(
   }
 );
 
-//  @route  Delete  api/items/:id
+//  @route  Delete  api/items/item/:id
 //  @desc   Delete item from items
 //  @access Private
 router.delete(
-  "/:id",
+  "/item/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Items.findOne({ user: req.user.id })
@@ -124,6 +125,41 @@ router.delete(
         console.log(removeIndex);
       })
       .catch(err => res.status(400).json(error));
+  }
+);
+
+//  @route  GET   api/items/monthly
+//  @desc   Get Item as monthly
+//  @access Private
+router.get(
+  "/monthly/:date",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    date = req.params.date;
+    date = new Date(date);
+    console.log(date);
+    console.log("monthly wise show income");
+    Items.findOne({ user: req.user.id })
+      .then(items => {
+        // console.log(items);
+        const getData = items.items.filter(
+          obj => obj.date.getMonth() == date.getMonth()
+        );
+        console.log(getData);
+        if (getData.length) {
+          console.log("inside");
+          return getData;
+        }
+        return res.status(400);
+      })
+      .then(data => {
+        return res.status(200).json(data);
+      })
+      .catch(() => {
+        return res.status(400).json({
+          noitemFound: "No Data Found"
+        });
+      });
   }
 );
 

@@ -131,6 +131,9 @@ router.get(
   }
 );
 
+//  @route  DELETE api/users/delete
+//  @desc   Delete user and its all items
+//  @access Private
 router.delete(
   "/delete",
   passport.authenticate("jwt", { session: false }),

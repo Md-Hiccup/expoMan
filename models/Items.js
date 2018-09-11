@@ -22,7 +22,11 @@ const ItemSchema = new Schema({
         required: true
       }
     }
-  ]
+  ],
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = Items = mongoose.model("items", ItemSchema);
