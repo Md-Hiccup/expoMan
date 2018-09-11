@@ -31,7 +31,7 @@ router.get(
 );
 
 //  @route  POST api/items
-//  @desc   Create item
+//  @desc   Get individual item
 //  @access Private
 router.get(
   "/:id",
