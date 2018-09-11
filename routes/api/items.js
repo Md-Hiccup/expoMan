@@ -139,12 +139,12 @@ router.get(
   (req, res) => {
     date = req.params.date;
     date = new Date(date);
-    date = getDate(date)
+    date = getDate(date);
     console.log("inside date ", date);
     Items.findOne({ user: req.user.id })
       .then(items => {
         const getData = items.items.filter(obj => {
-          return getDate(obj.date) == date
+          return getDate(obj.date) == date;
         });
         if (getData.length) {
           return getData;
@@ -183,7 +183,7 @@ router.get(
   (req, res) => {
     date = req.params.date;
     date = new Date(date);
-    month = date.getMonth() + 1
+    month = date.getMonth() + 1;
     console.log("monthly wise show income", month);
     Items.findOne({ user: req.user.id })
       .then(items => {
@@ -281,7 +281,7 @@ router.get(
             return a.price;
           })
           .reduce((a, c) => a + c);
-        
+
         console.log("total", total);
         return res.status(200).json({
           status: "success",
@@ -298,11 +298,10 @@ router.get(
   }
 );
 
-
 //  Get Date (YYYY-MM-DD)
 const getDate = date => {
   return date.toISOString().slice(0, 10);
-}
+};
 
 //  Get Quarter of Date
 const getQuarter = date => {
@@ -312,8 +311,7 @@ const getQuarter = date => {
 //  Get Week of Year
 const getWeek = date => {
   var onejan = new Date(date.getFullYear(), 0, 1);
-  week = Math.ceil(((date - onejan) / 86400000 + onejan.getDay() + 1) / 7);
-  return week;
+  return Math.ceil(((date - onejan) / 86400000 + onejan.getDay() + 1) / 7);
 };
 
 module.exports = router;
