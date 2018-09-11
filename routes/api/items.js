@@ -30,25 +30,32 @@ router.get(
   }
 );
 
-//  @route  POST api/items
-//  @desc   Create item
+//  @route  GET api/items
+//  @desc   Get item by :id
 //  @access Private
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     id = req.params.id;
-    Items.find({ user: req.user.id })
-      .then(item => {
-        console.log("s", item);
-        res.json(item);
+    Items.findOne({ user: req.user.id })
+      .then(items => {
+        const getIndex = items.items.filter(item => item.id == req.params.id);
+        console.log(getIndex.length);
+        if (getIndex.length) {
+          console.log("inside");
+          return getIndex[0];
+        }
+        return res.status(400);
       })
-      .catch(err =>
-        res.status(404).json({
-          noitemfound: "No item found with that id"
-        })
-      );
-    // });
+      .then(data => {
+        res.json(data);
+      })
+      .catch(() => {
+        return res.status(404).json({
+          noitemfound: "No item Found on this id"
+        });
+      });
   }
 );
 
@@ -68,25 +75,25 @@ router.post(
     itemDate = {};
 
     Items.findOne({ user: req.user.id }).then(material => {
+      itemDate = {
+        name: req.body.name,
+        price: req.body.price
+      };
       if (!material) {
         newItems = new Items({
           user: req.user.id,
           items: []
         });
-        items = {
-          name: req.body.name,
-          price: req.body.price
-        };
-        newItems.items.unshift(items);
+        newItems.items.unshift(itemDate);
         newItems
           .save()
           .then(items => res.json(items))
           .catch(err => res.status(404).json("not inserted !!"));
       }
-      itemDate = {
-        name: req.body.name,
-        price: req.body.price
-      };
+      // itemDate = {
+      //   name: req.body.name,
+      //   price: req.body.price
+      // };
       material.items.unshift(itemDate);
       material
         .save()
