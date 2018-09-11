@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+// const moment = require('moment');
+
 //  Load Input Validation
 const validateItemsInput = require("../../validation/item");
 
@@ -78,7 +80,7 @@ router.post(
       itemDate = {
         name: req.body.name,
         price: req.body.price,
-        date: new Date(req.body.date)
+        date: req.body.date
       };
       if (!material) {
         newItems = new Items({
@@ -128,22 +130,26 @@ router.delete(
   }
 );
 
-//  @route  GET   api/items/monthly
-//  @desc   Get Item as monthly
+//  @route  GET   api/items/date
+//  @desc   Get Item as per date
 //  @access Private
 router.get(
-  "/monthly/:date",
+  "/date/:date",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     date = req.params.date;
     date = new Date(date);
     console.log(date);
-    console.log("monthly wise show income");
+    console.log('inside date')
+    // return res.json(date)
     Items.findOne({ user: req.user.id })
       .then(items => {
-        // console.log(items);
+        console.log(items);
         const getData = items.items.filter(
-          obj => obj.date.getMonth() == date.getMonth()
+          obj => {
+            console.log(obj.date.getDate())
+            return obj.date.getDate() == date.getDate()
+          }
         );
         console.log(getData);
         if (getData.length) {
@@ -160,6 +166,56 @@ router.get(
           noitemFound: "No Data Found"
         });
       });
+  }
+);
+
+//  @route  GET   api/items/monthly
+//  @desc   Get Item as monthly
+//  @access Private
+router.get(
+  "/monthly/:date",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    date = req.params.date;
+    date = new Date(date);
+    console.log(date);
+    console.log("monthly wise show income");
+    Items.findOne({ user: req.user.id })
+      .then(items => {
+        // console.log(items);
+        const getData = items.items.filter(
+          obj => obj.date.getMonth()+1 == date.getMonth()+1
+        );
+        console.log(getData);
+        if (getData.length) {
+          console.log("inside");
+          return getData;
+        }
+        return res.status(400);
+      })
+      .then(data => {
+        return res.status(200).json(data);
+      })
+      .catch(() => {
+        return res.status(400).json({
+          noitemFound: "No Data Found"
+        });
+      });
+  }
+);
+
+//  @route  GET   api/items/monthly
+//  @desc   Get Item as monthly
+//  @access Private
+router.get(
+  "/weekly/:date",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    date = req.params.date;
+    date = new Date(date);
+    console.log(date);
+    console.log('inside weekly')
+    return res.json(date)
   }
 );
 
