@@ -4,8 +4,11 @@
   "description": "Manage all expenses of users.",
   "main": "server.js",
   "scripts": {
+    "client-install": "npm install --prefix client",
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Md Hiccup",
   "license": "MIT",
@@ -16,7 +19,6 @@
     "express": "^4.16.3",
     "gravatar": "^1.6.0",
     "jsonwebtoken": "^8.3.0",
-    "moment": "^2.22.2",
     "mongoose": "^5.2.4",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
