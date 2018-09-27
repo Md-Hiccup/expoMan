@@ -37,6 +37,11 @@ class Navbar extends Component {
     const guestLinks = (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
+          <Link className="nav-link" to="/dashboard">
+            Dashboard
+          </Link>
+        </li>
+        <li className="nav-item">
           <Link className="nav-link" to="/register">
             Sign Up
           </Link>
@@ -55,7 +60,6 @@ class Navbar extends Component {
             <Link className="navbar-brand" to="/">
               ExpoMan
             </Link>
-
             <button
               className="navbar-toggler"
               type="button"

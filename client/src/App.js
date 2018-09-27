@@ -12,45 +12,17 @@ import Footer from "./components/layout/Footer";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-
+import Dashboard from "./components/dashboard/Dashboard";
 import "./App.css";
-
-import Particles from "react-particles-js";
-
-const particleOpt = {
-  particles: {
-    number: {
-      value: 80,
-      density: {
-        enable: true,
-        value_area: 800
-      }
-    },
-    shape: {
-      type: "polygon"
-    },
-    size: {
-      value: 2
-    },
-    move: {
-      speed: 10
-    }
-  },
-  interactivity: {
-    onhover: {
-      enable: true
-    }
-  }
-};
 
 //  Check for token
 if (localStorage.jwtToken) {
   //  Set auth token header auth
-  setAuthToken(localStorage.jwtToken)
+  setAuthToken(localStorage.jwtToken);
   //  Decode token and get user info and exp
-  const decoded = jwt_decode(localStorage.jwtToken)
+  const decoded = jwt_decode(localStorage.jwtToken);
   //  Set user and isAuthenticated
-  store.dispatch(setCurrentUser(decoded))
+  store.dispatch(setCurrentUser(decoded));
 
   //  Check for expired token
   const currentTime = Date.now() / 1000;
@@ -60,7 +32,7 @@ if (localStorage.jwtToken) {
 
     //ToDo: Clear Current Profile
     //Redirect to login
-    window.location.href = '/login';
+    window.location.href = "/login";
   }
 }
 class App extends Component {
@@ -74,11 +46,11 @@ class App extends Component {
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/dashboard" component={Dashboard} />
               {/* <Switch> */}
               {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
               {/* </Switch> */}
             </div>
-            <Particles params={particleOpt} />
             <Footer />
           </div>
         </Router>

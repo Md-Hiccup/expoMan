@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import classnames from "classnames";
 
+import Particles from './Particles';
 class Register extends Component {
   constructor() {
     super();
@@ -56,6 +57,7 @@ class Register extends Component {
 
     return (
       <div className="landing">
+        <Particles />
         <div className="dark-overlay landign-inner">
           <div className="form">
             <div className="card">

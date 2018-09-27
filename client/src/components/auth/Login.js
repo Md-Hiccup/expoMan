@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { loginUser } from '../../actions/authActions';
 import { Link } from "react-router-dom";
 
+import Particles from './Particles';
 class Login extends Component {
   constructor() {
     super();
@@ -55,6 +56,7 @@ class Login extends Component {
 
     return (
       <div className="landing">
+        <Particles />
         <div className="dark-overlay landign-inner">
           <div className="form">
             <div className="card">
