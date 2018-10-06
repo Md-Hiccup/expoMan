@@ -43,14 +43,13 @@ class App extends Component {
           <div>
             <Navbar />
             <Route exact path="/" component={Landing} />
-            <div className="container">
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+            {/* <Particles params={particleOpt}/> */}
               <Route exact path="/dashboard" component={Dashboard} />
               {/* <Switch> */}
               {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
               {/* </Switch> */}
-            </div>
             <Footer />
           </div>
         </Router>

@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import classnames from "classnames";
 
-import Particles from './Particles';
+// import Particles from './Particles';
+// import Particles from "react-particles-js";
+
 class Register extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       name: "",
       email: "",
@@ -24,10 +26,10 @@ class Register extends Component {
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
+      this.props.history.push("/dashboard");
     }
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
@@ -56,119 +58,107 @@ class Register extends Component {
     const { errors } = this.state;
 
     return (
-      <div className="landing">
-        <Particles />
-        <div className="dark-overlay landign-inner">
-          <div className="form">
-            <div className="card">
-              <div className="card-body">
-                <div className="register">
-                  <div className="container">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <h3 className="display-8 text-center">Sign Up</h3>
-                        <p className="text-center">
-                          Create your ExpoMan account
-                        </p>
-                        <form onSubmit={this.onSubmit}>
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              className={classnames(
-                                "form-control form-control-lg",
-                                {
-                                  "is-invalid": errors.name
-                                }
-                              )}
-                              placeholder="Name"
-                              name="name"
-                              value={this.state.name}
-                              onChange={this.onChange}
-                            />
-                            {errors.name && (
-                              <div className="invalid-feedback">
-                                {errors.name}
-                              </div>
-                            )}
-                          </div>
-                          <div className="form-group">
-                            <input
-                              type="email"
-                              className={classnames(
-                                "form-control form-control-lg",
-                                {
-                                  "is-invalid": errors.email
-                                }
-                              )}
-                              placeholder="Email Address"
-                              name="email"
-                              value={this.state.email}
-                              onChange={this.onChange}
-                            />
-                            {errors.email && (
-                              <div className="invalid-feedback">
-                                {errors.email}
-                              </div>
-                            )}
-                            <small className="form-text text-muted">
-                              This site uses Gravatar so if you want a profile
-                              image, use a Gravatar email
-                            </small>
-                          </div>
-                          <div className="form-group">
-                            <input
-                              type="password"
-                              className={classnames(
-                                "form-control form-control-lg",
-                                {
-                                  "is-invalid": errors.password
-                                }
-                              )}
-                              placeholder="Password"
-                              name="password"
-                              value={this.state.password}
-                              onChange={this.onChange}
-                            />
-                            {errors.password && (
-                              <div className="invalid-feedback">
-                                {errors.password}
-                              </div>
-                            )}
-                          </div>
-                          <div className="form-group">
-                            <input
-                              type="password"
-                              className={classnames(
-                                "form-control form-control-lg",
-                                {
-                                  "is-invalid": errors.password2
-                                }
-                              )}
-                              placeholder="Confirm Password"
-                              name="password2"
-                              value={this.state.password2}
-                              onChange={this.onChange}
-                            />
-                            {errors.password2 && (
-                              <div className="invalid-feedback">
-                                {errors.password2}
-                              </div>
-                            )}
-                          </div>
-                          <input
-                            type="submit"
-                            className="btn btn-info btn-block mt-4"
-                          />
-                        </form>
-                        <p
-                          className="text-center"
-                          style={{ marginTop: "2rem" }}
-                        >
-                          Already hava an account ?
-                          <Link to="/login"> Log in</Link>
-                        </p>
+      // {/* <div className="landing"> */}
+      // {/* <Particles params={this.props.particles} /> */}
+      // {/* <div className="dark-overlay landign-inner"> */}
+      <div className="form">
+        <div className="card">
+          <div className="card-body">
+            <div className="register">
+              <div className="container">
+                <div className="row">
+                  <div className="col-md-12">
+                    <h3 className="display-8 text-center">Sign Up</h3>
+                    <p className="text-center">Create your ExpoMan account</p>
+                    <form onSubmit={this.onSubmit}>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          className={classnames(
+                            "form-control form-control-lg",
+                            {
+                              "is-invalid": errors.name
+                            }
+                          )}
+                          placeholder="Name"
+                          name="name"
+                          value={this.state.name}
+                          onChange={this.onChange}
+                        />
+                        {errors.name && (
+                          <div className="invalid-feedback">{errors.name}</div>
+                        )}
                       </div>
-                    </div>
+                      <div className="form-group">
+                        <input
+                          type="email"
+                          className={classnames(
+                            "form-control form-control-lg",
+                            {
+                              "is-invalid": errors.email
+                            }
+                          )}
+                          placeholder="Email Address"
+                          name="email"
+                          value={this.state.email}
+                          onChange={this.onChange}
+                        />
+                        {errors.email && (
+                          <div className="invalid-feedback">{errors.email}</div>
+                        )}
+                        <small className="form-text text-muted">
+                          This site uses Gravatar so if you want a profile
+                          image, use a Gravatar email
+                        </small>
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="password"
+                          className={classnames(
+                            "form-control form-control-lg",
+                            {
+                              "is-invalid": errors.password
+                            }
+                          )}
+                          placeholder="Password"
+                          name="password"
+                          value={this.state.password}
+                          onChange={this.onChange}
+                        />
+                        {errors.password && (
+                          <div className="invalid-feedback">
+                            {errors.password}
+                          </div>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="password"
+                          className={classnames(
+                            "form-control form-control-lg",
+                            {
+                              "is-invalid": errors.password2
+                            }
+                          )}
+                          placeholder="Confirm Password"
+                          name="password2"
+                          value={this.state.password2}
+                          onChange={this.onChange}
+                        />
+                        {errors.password2 && (
+                          <div className="invalid-feedback">
+                            {errors.password2}
+                          </div>
+                        )}
+                      </div>
+                      <input
+                        type="submit"
+                        className="btn btn-info btn-block mt-4"
+                      />
+                    </form>
+                    <p className="text-center" style={{ marginTop: "2rem" }}>
+                      Already hava an account ?<Link to="/login"> Log in</Link>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -176,6 +166,8 @@ class Register extends Component {
           </div>
         </div>
       </div>
+      /* </div> */
+      /* </div> */
     );
   }
 }

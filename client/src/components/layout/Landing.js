@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+// import Particles from "../auth/Particles";
 
 class Landing extends Component {
   componentDidMount() {
@@ -11,9 +12,10 @@ class Landing extends Component {
   }
   render() {
     return (
-      <div className="landing">
-        <div className="dark-overlay landing-inner text-light">
-          <div className="container">
+      // <div className="landing">
+        // {/* <Particles /> */}
+        // <div className="dark-overlay landing-inner text-light">
+          <div className="container text-light mb-5">
             <div className="row">
               <div className="col-md-12 text-center">
                 <h1 className="display-3 mb-4">Expense Manager</h1>
@@ -41,8 +43,8 @@ class Landing extends Component {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        // </div>
+      // </div>
     );
   }
 }

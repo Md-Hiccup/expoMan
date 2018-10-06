@@ -54,27 +54,31 @@ class Navbar extends Component {
       </ul>
     );
     return (
-      <div>
-        <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-2">
-          <div className="container">
-            <Link className="navbar-brand" to="/">
-              ExpoMan
-            </Link>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#mobile-nav"
-            >
-              <span className="navbar-toggler-icon" />
-            </button>
+      // <div>
+      // <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+      <nav
+        className="navbar navbar-dark navbar-expand-sm bg-dark flex-md-nowrap shadow"
+        style={{ "z-index": "1030" }}
+      >
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            ExpoMan
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#mobile-nav"
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
 
-            <div className="collapse navbar-collapse" id="mobile-nav">
-              {isAuthenticated ? authLinks : guestLinks}
-            </div>
+          <div className="collapse navbar-collapse" id="mobile-nav">
+            {isAuthenticated ? authLinks : guestLinks}
           </div>
-        </nav>
-      </div>
+        </div>
+      </nav>
+      // </div>
     );
   }
 }
